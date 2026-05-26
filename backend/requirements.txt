@@ -1,0 +1,11 @@
+# GauGAN Studio v5 — requirements
+# Much lighter than before! No PyTorch or diffusers needed.
+# Install: pip install -r requirements.txt
+
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+Pillow==10.3.0
+numpy==1.26.4
+httpx==0.27.0
+python-dotenv==1.0.1
