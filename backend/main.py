@@ -106,7 +106,6 @@ def analyze_drawing(img_array: np.ndarray) -> dict:
 
 
 def build_prompt(analysis: dict, style_strength: float = 1.0) -> str:
-    """Build a detailed satellite prompt from terrain analysis."""
     coverage = analysis["terrain_coverage"]
     spatial  = analysis["spatial_layout"]
     if not coverage:
