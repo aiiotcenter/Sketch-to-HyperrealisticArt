@@ -1,36 +1,3 @@
-"""
-=============================================================================
-  GauGAN Studio — Backend v6 (Flux.1 Canny Pro via Replicate)
-  Run: uvicorn main:app --reload --port 8000
-=============================================================================
-
-HOW IT WORKS NOW
-─────────────────
-1. Receive the drawing canvas from the frontend
-2. Analyze pixels → detect terrain types + spatial layout
-3. Build a detailed satellite prompt from the analysis
-4. Extract Canny edges from the drawing (OpenCV-style using PIL)
-   → Canny edges = the outlines of every region the user drew
-5. Send BOTH the edges image + prompt to Replicate's Flux.1 Canny Pro API
-6. Flux.1 Canny Pro generates a satellite image that FOLLOWS the exact
-   shape/position of every region in the drawing
-7. Apply border masking (white/transparent outside)
-8. Return result
-
-WHY THIS IS BETTER THAN POLLINATIONS
-──────────────────────────────────────
-Pollinations only sees a TEXT description of the drawing.
-Flux.1 Canny Pro sees the ACTUAL EDGES of the drawing as a control image.
-So the AI knows exactly where the lake is, where the forest starts, etc.
-The output will closely match the user's drawing layout.
-
-REPLICATE API
-─────────────
-Model: black-forest-labs/flux-canny-pro
-Docs:  https://replicate.com/black-forest-labs/flux-canny-pro
-Cost:  ~$0.05 per image
-Auth:  Bearer token in Authorization header
-"""
 
 import io
 import base64
@@ -88,7 +55,6 @@ CANVAS_SIZE = 1024
 # ─────────────────────────────────────────────────────────────────────────────
 
 def match_terrain(r, g, b):
-    """Find nearest terrain by Euclidean RGB distance, within tolerance."""
     best_terrain = None
     best_dist    = float("inf")
     for t in TERRAINS:
@@ -101,7 +67,6 @@ def match_terrain(r, g, b):
 
 
 def analyze_drawing(img_array: np.ndarray) -> dict:
-    """Scan every pixel → detect terrain types + spatial positions."""
     h, w = img_array.shape[:2]
     terrain_pixels = { t["name"]: 0 for t in TERRAINS }
     total_inside   = 0
@@ -190,23 +155,6 @@ def build_prompt(analysis: dict, style_strength: float = 1.0) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def extract_canny_edges(pil_img: Image.Image) -> Image.Image:
-    """
-    Extract Canny-style edges from the drawing using PIL.
-
-    Why we need this:
-    Flux.1 Canny Pro expects a BLACK image with WHITE edge lines.
-    It uses these edges as a structural guide — the generated image
-    will follow the exact boundaries between regions.
-
-    How it works:
-    1. Convert drawing to grayscale
-    2. Apply edge detection using PIL's FIND_EDGES filter
-    3. Threshold to get clean black/white edges
-    4. Invert if needed (Flux expects white edges on black)
-
-    This means every boundary between regions (grass→water, forest→mountain)
-    becomes an edge that Flux will follow exactly.
-    """
     # Resize to 512x512
     img = pil_img.convert("RGB").resize((CANVAS_SIZE, CANVAS_SIZE), Image.LANCZOS)
 
@@ -232,7 +180,6 @@ def extract_canny_edges(pil_img: Image.Image) -> Image.Image:
 
 
 def pil_to_base64(img: Image.Image) -> str:
-    """Convert PIL image to base64 data URL."""
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
@@ -242,7 +189,7 @@ def pil_to_base64(img: Image.Image) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def apply_output_mask(generated_img: Image.Image, original_drawing: np.ndarray, output_mode: str) -> Image.Image:
-    """Apply border mask to generated image."""
+  
     if output_mode == "full":
         return generated_img
     outside_mask = (original_drawing[:,:,0]>230) & (original_drawing[:,:,1]>230) & (original_drawing[:,:,2]>230)
@@ -264,21 +211,7 @@ def apply_output_mask(generated_img: Image.Image, original_drawing: np.ndarray, 
 # ─────────────────────────────────────────────────────────────────────────────
 
 async def call_replicate(prompt: str, canny_image_b64: str, guidance: float = 30.0) -> bytes:
-    """
-    Call Replicate's Flux.1 Canny Pro API.
-
-    How Replicate works:
-    1. POST to /v1/predictions → creates a prediction job, returns a URL
-    2. Poll GET {prediction_url} until status == "succeeded"
-    3. Download the output image from the URL in the response
-
-    The canny_image_b64 is sent as a data URL — Replicate accepts this directly.
-
-    Parameters:
-      prompt         : detailed satellite text prompt
-      canny_image_b64: base64 PNG data URL of the edge image
-      guidance       : how strongly to follow the canny edges (10-50, higher=stricter)
-    """
+ 
     headers = {
         "Authorization": f"Bearer {REPLICATE_API_KEY}",
         "Content-Type":  "application/json",
@@ -364,7 +297,7 @@ def health():
 
 @app.post("/analyze")
 async def analyze_endpoint(file: UploadFile = File(...)):
-    """Debug: analyze drawing and return prompt without generating."""
+   
     raw = await file.read()
     img = Image.open(io.BytesIO(raw)).convert("RGB").resize((CANVAS_SIZE,CANVAS_SIZE))
     arr = np.array(img)
@@ -379,18 +312,7 @@ async def generate(
     style_strength: float = 1.0,
     output_mode: str = "white",
 ):
-    """
-    Main generation endpoint.
-
-    Flow:
-      1. Receive drawing PNG
-      2. Analyze pixel colors → terrain types + spatial positions
-      3. Build detailed satellite prompt
-      4. Extract Canny edges from drawing
-      5. Call Replicate Flux.1 Canny Pro with edges + prompt
-      6. Apply border masking
-      7. Return base64 PNG
-    """
+ 
     if REPLICATE_API_KEY == "":
         raise HTTPException(500, "Replicate API key not set. Create backend/.env file with REPLICATE_API_KEY=r8_your_key_here")
 
