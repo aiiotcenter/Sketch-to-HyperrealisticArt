@@ -4,7 +4,7 @@
 
 GauGAN Studio is a web application that turns hand-drawn color-coded terrain maps into photorealistic satellite-style imagery using AI. Paint your landscape with terrain labels (grass, water, forest, mountains, etc.), hit **Generate**, and the AI produces a 1024×1024 top-down satellite image of your scene.
 
-**Student:** Taha Mohamed | ID: 20222588 | Supervisor: Cliff | NEU 2025–2026
+**Student:** Taha Mohamed | ID: 20222588 | NEU 2025–2026
 
 ---
 
