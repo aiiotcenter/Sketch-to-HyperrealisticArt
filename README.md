@@ -1,4 +1,4 @@
-# 🛰️ GauGAN Studio — Satellite Map Generator
+#  GauGAN Studio — Satellite Map Generator
 
 > Draw a terrain map. Get a realistic satellite image.
 
@@ -8,23 +8,23 @@ GauGAN Studio is a web application that turns hand-drawn color-coded terrain map
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎨 **9 terrain types** — Grass, Water, Mountain, Snow, Rock, Tree, Road, Building, Sand
-- 🖌️ **7 drawing tools** — Brush, Eraser, Fill, Rectangle, Circle, Triangle, Line
-- ↩️ **Undo / Redo** — Ctrl+Z / Ctrl+Y
-- 📐 **Adjustable brush size & opacity**
-- 🤖 **AI image generation** powered by Flux.1 Canny Pro (via Replicate)
-- 🗺️ **Terrain coverage badges** — see the % breakdown of your map
-- 📝 **Prompt viewer** — inspect the exact prompt sent to the AI
-- 🕘 **Generation history** — last 8 outputs stored as thumbnails
-- 💾 **Save PNG** — download the generated satellite image
-- 🔲 **Output modes** — Full image / White outside canvas / Transparent outside canvas
-- 🔍 **Fullscreen lightbox** on image click
+-  **9 terrain types** — Grass, Water, Mountain, Snow, Rock, Tree, Road, Building, Sand
+-  **7 drawing tools** — Brush, Eraser, Fill, Rectangle, Circle, Triangle, Line
+-  **Undo / Redo** — Ctrl+Z / Ctrl+Y
+-  **Adjustable brush size & opacity**
+-  **AI image generation** powered by Flux.1 Canny Pro (via Replicate)
+-  **Terrain coverage badges** — see the % breakdown of your map
+-  **Prompt viewer** — inspect the exact prompt sent to the AI
+-  **Generation history** — last 8 outputs stored as thumbnails
+-  **Save PNG** — download the generated satellite image
+-  **Output modes** — Full image / White outside canvas / Transparent outside canvas
+-  **Fullscreen lightbox** on image click
 
 ---
 
-## 🖥️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -36,7 +36,7 @@ GauGAN Studio is a web application that turns hand-drawn color-coded terrain map
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 gaugan-app/
@@ -60,7 +60,7 @@ gaugan-app/
 
 ---
 
-## ⚙️ Setup & Installation
+##  Setup & Installation
 
 ### Prerequisites
 - Node.js 18+ (Node 20 recommended)
@@ -111,7 +111,7 @@ Then open **http://localhost:3000** in your browser.
 
 ---
 
-## 🎨 Terrain Color Reference
+##  Terrain Color Reference
 
 | Terrain | Color | Hex | RGB |
 |---|---|---|---|
@@ -127,7 +127,7 @@ Then open **http://localhost:3000** in your browser.
 
 ---
 
-## 🤖 How the AI Pipeline Works
+##  How the AI Pipeline Works
 
 ```
 User draws on canvas
@@ -152,7 +152,7 @@ Returns 1024×1024 satellite image + prompt + terrain coverage %
 
 ---
 
-## 🧰 Drawing Tools
+##  Drawing Tools
 
 | Tool | Shortcut |
 |---|---|
@@ -168,7 +168,7 @@ Returns 1024×1024 satellite image + prompt + terrain coverage %
 
 ---
 
-## 🔐 Security Notes
+##  Security Notes
 
 - Your `REPLICATE_API_KEY` is stored in `backend/.env` which is listed in `.gitignore`
 - **Never commit your `.env` file** — use `.env.example` as a template instead
@@ -176,7 +176,7 @@ Returns 1024×1024 satellite image + prompt + terrain coverage %
 
 ---
 
-## 📜 License
+##  License
 
 This project was developed as an academic capstone project at NEU (2025–2026).  
 For educational and portfolio use only.
